@@ -3,7 +3,6 @@ import os
 import hashlib # For hashing master password
 import pyperclip # For copying passwords to clipboard
 
-# Assuming key_manager.py is in the same directory
 from key_manager import get_fernet_cipher, generate_key
 
 DATA_FILE = "passwords.json"
@@ -23,7 +22,6 @@ class PasswordManager:
         self.master_password_hash = self._load_master_password_hash()
 
     def _load_passwords(self):
-        """Loads encrypted passwords from the data file."""
         if os.path.exists(DATA_FILE):
             try:
                 with open(DATA_FILE, "r") as f:
@@ -84,23 +82,23 @@ class PasswordManager:
 
     def authenticate(self):
         """Authenticates the user with the master password."""
-        print("DEBUG: Inside authenticate function.") # <-- הוסף שורה זו
+        print("DEBUG: Inside authenticate function.") 
         if not self.master_password_hash:
-            print("DEBUG: Master password hash not found. Setting new one.") # <-- הוסף שורה זו
+            print("DEBUG: Master password hash not found. Setting new one.") 
             print("No master password set. Please set one first.")
             self.set_master_password()
             return True # After setting, assume authenticated
 
-        entered_master = input("Enter master password: ") # <--- וודא שזה input כאן!
-        print(f"DEBUG: Entered master password (hashed): {self._hash_password(entered_master)}") # <-- הוסף שורה זו
-        print(f"DEBUG: Stored master password hash: {self.master_password_hash}") # <-- הוסף שורה זו
+        entered_master = input("Enter master password: ") 
+        print(f"DEBUG: Entered master password (hashed): {self._hash_password(entered_master)}")
+        print(f"DEBUG: Stored master password hash: {self.master_password_hash}") 
 
         if self._hash_password(entered_master) == self.master_password_hash:
             print("Authentication successful!")
             return True
         else:
             print("Authentication failed.")
-            print("DEBUG: Master password mismatch.") # <-- הוסף שורה זו
+            print("DEBUG: Master password mismatch.") 
             return False
 
     def add_password(self):
@@ -108,16 +106,16 @@ class PasswordManager:
         if not self.authenticate(): return
 
         service = input("Enter service name (e.g., Google, Facebook): ").strip()
-        password = input("Enter password: ").strip() # השתמשנו ב-input באופן זמני, וחשוב לוודא שיש .strip()
+        password = input("Enter password: ").strip() 
 
-        print(f"DEBUG: Service entered: '{service}', Password entered (length): {len(password) if password else 0}") # <-- הוסף שורה זו
+        print(f"DEBUG: Service entered: '{service}', Password entered (length): {len(password) if password else 0}")
 
         if service and password:
             self.passwords[service] = password
             self._save_passwords()
             print(f"Password for '{service}' added successfully.")
         else:
-            print("DEBUG: Service or password was empty.") # <-- הוסף שורה זו
+            print("DEBUG: Service or password was empty.") 
             print("Service and password cannot be empty.")
 
     def view_passwords(self):
